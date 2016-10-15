@@ -269,7 +269,8 @@ _retry:
 static int netfox_createPackage(lua_State* L) {
   size_t size;
   const char* data = lua_tolstring(L,1,&size);
-  //printf("data is %s %d\r\n",data,size);
+	if(size > 65535)
+		printf("the package is to big than unsigned short range");
 
   char* buffer = (char*)malloc(sizeof(CMD_Head) + size + 100);
   CMD_Head* pHeader = (CMD_Head*)buffer;
@@ -289,9 +290,6 @@ static int netfox_createPackage(lua_State* L) {
 
   int wSendSize = sizeof(CMD_Head) + size;
   lua_pushlstring(L,buffer,wSendSize);
-
-  //printf("buffer is %s\r\n",buffer + 8);
-
   free(buffer);
 
   return 1;
