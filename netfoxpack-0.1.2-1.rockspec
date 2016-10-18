@@ -1,9 +1,9 @@
 package = "netfoxpack"
-version = "0.1.1-1"
+version = "0.1.2-1"
 
 source = {
   url = "git://github.com/reasonMix/netfoxpack.git",
-  tag = "v0.1.1"
+  tag = "v0.1.2"
 }
 description={
    summary = 'the netfox package the data',

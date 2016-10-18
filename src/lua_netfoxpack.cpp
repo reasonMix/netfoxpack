@@ -1,6 +1,7 @@
 #include "lua_netfoxpack.hpp"
 #include "../LuaFunction.hpp"
 #include<stdlib.h>
+#include<string.h>
 
 
 #define Key_Value   "ABcde34gdbbddddd"
