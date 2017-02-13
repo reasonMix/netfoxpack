@@ -152,6 +152,7 @@ void CodecData_reset(CodecData* data) {
   data->subID = 0,
   data->_receiveSeqNum = 0;
   data->_needReadTotalSize = sizeof(CMD_Head);
+	printf("data->_needReadTotalSize is %d \r\n",data->_needReadTotalSize);
 }
 
 void CodecData_init(CodecData* data) {
@@ -178,6 +179,8 @@ static int _read_head_ok(CodecData* self){
 	}
 
 	self->_needReadTotalSize = header->CmdInfo.wPacketSize - sizeof(CMD_Head);
+	printf("_read_head_ok callback %d \r\n",self->_needReadTotalSize);
+
 	self->_receiveSeqNum ++;
 	self->_readStep = 1;
 	self->_currentReadSize = 0;
@@ -218,6 +221,8 @@ static int netfox_process(lua_State* L){
   const char* buf = lua_tolstring(L,2,&nread);
   LuaFunction onMessage(L,3);
   LuaFunction onError(L,4);
+
+	printf("nread is %d \r\n",nread);
 
 	int end = 0;
 	int big = 0;
