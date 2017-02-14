@@ -9,7 +9,7 @@ const unsigned int  g_dwDelta = 0xA55AA55A;
 #define SOCKET_VER 0x66
 
 //Decrypt
-static void DecryptTEA(int *dwFirstChunk, int *dwSecondChunk)
+static void DecryptTEA(unsigned int *dwFirstChunk,unsigned int *dwSecondChunk)
 {
 	const unsigned int *dwXorKey = (unsigned int*)Key_Value;
 	unsigned int sum = 0;
@@ -26,7 +26,8 @@ static void DecryptTEA(int *dwFirstChunk, int *dwSecondChunk)
 		y -= (z << 4) + dwXorKey[0] ^ z + sum ^ (z >> 5) + dwXorKey[1];
 		sum -= dwDelta;
 	}
-
+	
+	printf("%d %d\r\n",y,z);
 	*dwFirstChunk = y;
 	*dwSecondChunk = z;
 }
@@ -49,7 +50,7 @@ static void EncryptTEA(unsigned int *dwFirstChunk, unsigned int *dwSecondChunk)
 		y += ((z << 4) + key[0]) ^ (z + sum) ^ ((z >> 5) + key[1]);
 		z += ((y << 4) + key[2]) ^ (y + sum) ^ ((y >> 5) + key[3]);
 	}
-
+        printf("xxxxxxx %d %d",y,z);
 	*dwFirstChunk = y;
 	*dwSecondChunk = z;
 }
@@ -57,10 +58,11 @@ static void EncryptTEA(unsigned int *dwFirstChunk, unsigned int *dwSecondChunk)
 //Decrypt
 static void DecryptBuffer(unsigned char* pBuffer, unsigned short wDataSize)
 {
+	printf("wDataSize is %d\r\n",wDataSize);
 	unsigned char *p = pBuffer;
 	while (p < pBuffer + wDataSize)
 	{
-		DecryptTEA((int *)p, (int *)(p + sizeof(int)));
+		DecryptTEA((unsigned int *)p, (unsigned int *)(p + sizeof(unsigned int)));
 		p += sizeof(unsigned int) * 2;
 	}
 }
@@ -152,7 +154,6 @@ void CodecData_reset(CodecData* data) {
   data->subID = 0,
   data->_receiveSeqNum = 0;
   data->_needReadTotalSize = sizeof(CMD_Head);
-	printf("data->_needReadTotalSize is %d \r\n",data->_needReadTotalSize);
 }
 
 void CodecData_init(CodecData* data) {
@@ -168,6 +169,12 @@ void CodecData_destroy(CodecData* data) {
 
 static int _read_head_ok(CodecData* self){
 	CMD_Head* header = (CMD_Head*)self->_readBuffer;
+        unsigned char* buffer = (unsigned char*)header;
+         int i  =0;
+ for (i = 0;i < 8;i++){
+  printf("%d\r\n",buffer[i]);
+ }
+ printf("==========================");
 	DecryptBuffer((unsigned char*)header, sizeof(CMD_Head));
 	//printf("receive main id is %d ,sub id is %d body size is %d,\r\n", header->CommandInfo.wMainCmdID, header->CommandInfo.wSubCmdID, header->CmdInfo.wPacketSize);
 	if (header->CmdInfo.cbCheckCode != 0x02 || header->CmdInfo.cbVersion != SOCKET_VER){
@@ -279,7 +286,7 @@ static int netfox_createPackage(lua_State* L) {
 	if(size > 65535)
 		printf("the package is to big than unsigned short range");
 
-	printf("package is %d %d \r\n",size,data);
+	printf("package is %d %s \r\n",size,data);
 
   char* buffer = (char*)malloc(sizeof(CMD_Head) + size + 100);
   CMD_Head* pHeader = (CMD_Head*)buffer;
@@ -290,15 +297,30 @@ static int netfox_createPackage(lua_State* L) {
   pHeader->CmdInfo.cbVersion = SOCKET_VER;
   pHeader->CmdInfo.wPacketSize = sizeof(CMD_Head) + size;
   pHeader->CmdInfo.cbCheckCode = 0x02;
-  EncryptBuffer((unsigned char*)pHeader, sizeof(CMD_Head));
+
+// printf("pre size is %d\r\n",pHeader->CmdInfo.wPacketSize); 
+ EncryptBuffer((unsigned char*)pHeader, sizeof(CMD_Head));
+ int i  =0;
+ unsigned char* ubuff = (unsigned char*)buffer;
+ for (i = 0;i < 8;i++){
+  printf("%d\r\n",ubuff[i]);
+ }
+ printf("==========================");
+// printf("encrypt pre size is %d\r\n",pHeader->CmdInfo.wPacketSize);
+// DecryptBuffer((unsigned char*)pHeader, sizeof(CMD_Head));
+// printf("post size is %d\r\n",pHeader->CmdInfo.wPacketSize);
 
   if (size > 0)
   {
+	printf("call memcpy \r\n");
   	memcpy(&write_data[sizeof(CMD_Head)], data, size);
   }
 
   int wSendSize = sizeof(CMD_Head) + size;
+  printf("send wSendSize is %d\r\n",wSendSize);
   lua_pushlstring(L,buffer,wSendSize);
+  DecryptBuffer((unsigned char*)pHeader,sizeof(CMD_Head));
+  printf("pHeader->CmdInfo.wPacketSize is %d \r\n",pHeader->CmdInfo.wPacketSize);
   free(buffer);
 
   return 1;
