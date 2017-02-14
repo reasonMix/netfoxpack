@@ -9,7 +9,7 @@ const unsigned int  g_dwDelta = 0xA55AA55A;
 #define SOCKET_VER 0x66
 
 //Decrypt
-static void DecryptTEA(int *dwFirstChunk, int *dwSecondChunk)
+static void DecryptTEA(unsigned int *dwFirstChunk,unsigned int *dwSecondChunk)
 {
 	const unsigned int *dwXorKey = (unsigned int*)Key_Value;
 	unsigned int sum = 0;
@@ -60,7 +60,7 @@ static void DecryptBuffer(unsigned char* pBuffer, unsigned short wDataSize)
 	unsigned char *p = pBuffer;
 	while (p < pBuffer + wDataSize)
 	{
-		DecryptTEA((int *)p, (int *)(p + sizeof(int)));
+		DecryptTEA((unsigned int *)p, (unsigned int *)(p + sizeof(unsigned int)));
 		p += sizeof(unsigned int) * 2;
 	}
 }
@@ -152,7 +152,6 @@ void CodecData_reset(CodecData* data) {
   data->subID = 0,
   data->_receiveSeqNum = 0;
   data->_needReadTotalSize = sizeof(CMD_Head);
-	printf("data->_needReadTotalSize is %d \r\n",data->_needReadTotalSize);
 }
 
 void CodecData_init(CodecData* data) {
