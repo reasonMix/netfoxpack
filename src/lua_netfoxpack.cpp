@@ -180,6 +180,7 @@ static int _read_head_ok(CodecData* self){
 
 	self->_needReadTotalSize = header->CmdInfo.wPacketSize - sizeof(CMD_Head);
 	printf("_read_head_ok callback %d \r\n",self->_needReadTotalSize);
+	printf("header->CmdInfo.wPacketSize is  %d \r\n",header->CmdInfo.wPacketSize);
 
 	self->_receiveSeqNum ++;
 	self->_readStep = 1;
