@@ -279,7 +279,7 @@ static int netfox_createPackage(lua_State* L) {
 	if(size > 65535)
 		printf("the package is to big than unsigned short range");
 
-	printf('package is %d %d \r\n',size,data);
+	printf("package is %d %d \r\n",size,data);
 
   char* buffer = (char*)malloc(sizeof(CMD_Head) + size + 100);
   CMD_Head* pHeader = (CMD_Head*)buffer;
