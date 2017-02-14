@@ -34,3 +34,4 @@
 build.luarocks
 .tags
 .tags1
+CMakeFiles

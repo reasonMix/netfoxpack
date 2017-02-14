@@ -1,0 +1,7 @@
+/root/netfoxpack/CMakeFiles/install.dir
+/root/netfoxpack/CMakeFiles/list_install_components.dir
+/root/netfoxpack/CMakeFiles/rebuild_cache.dir
+/root/netfoxpack/CMakeFiles/install/strip.dir
+/root/netfoxpack/CMakeFiles/install/local.dir
+/root/netfoxpack/CMakeFiles/netfoxpack.dir
+/root/netfoxpack/CMakeFiles/edit_cache.dir
