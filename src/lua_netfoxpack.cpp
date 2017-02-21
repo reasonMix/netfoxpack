@@ -31,13 +31,18 @@ static void DecryptTEA(unsigned int *dwFirstChunk,unsigned int *dwSecondChunk)
 	*dwSecondChunk = z;
 }
 
+
 //Encrypt
 static void EncryptTEA(unsigned int *dwFirstChunk, unsigned int *dwSecondChunk)
 {
+#if __GNUC__ >= 5
+	rand(); 
+#endif
 	unsigned int y = *dwFirstChunk;
 	unsigned int z = *dwSecondChunk;
 	unsigned int sum = 0;
 	int i;
+
 
 	unsigned int *key = (unsigned int *)"ABcde34gdbbddddd";
 
@@ -50,8 +55,8 @@ static void EncryptTEA(unsigned int *dwFirstChunk, unsigned int *dwSecondChunk)
 		z += ((y << 4) + key[2]) ^ (y + sum) ^ ((y >> 5) + key[3]);
 	}
 
-	*dwFirstChunk = y;
 	*dwSecondChunk = z;
+	*dwFirstChunk = y;
 }
 
 //Decrypt
