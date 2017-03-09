@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC -O3 -DNDEBUG -shared -shared  -o netfoxpack.so CMakeFiles/netfoxpack.dir/src/lua_netfoxpack.cpp.o CMakeFiles/netfoxpack.dir/LuaFunction.cpp.o 
