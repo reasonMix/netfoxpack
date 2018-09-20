@@ -36,7 +36,7 @@ static void DecryptTEA(unsigned int *dwFirstChunk,unsigned int *dwSecondChunk)
 static void EncryptTEA(unsigned int *dwFirstChunk, unsigned int *dwSecondChunk)
 {
 #if __GNUC__ >= 5
-	rand(); 
+	rand();
 #endif
 	unsigned int y = *dwFirstChunk;
 	unsigned int z = *dwSecondChunk;
@@ -274,7 +274,7 @@ static int netfox_createPackage(lua_State* L) {
   size_t size;
   const char* data = lua_tolstring(L,1,&size);
 	if(size > 65535)
-		printf("the package is to big than unsigned short range");
+		printf("the package is to big than unsigned short range %s \r\n",data);
 
   char* buffer = (char*)malloc(sizeof(CMD_Head) + size + 100);
   CMD_Head* pHeader = (CMD_Head*)buffer;
