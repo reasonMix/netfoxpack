@@ -206,6 +206,10 @@ static void _read_body_ok(CodecData* self,const LuaFunction& onMessage){
   data.buf = package;
   data.len = packageSize;
 
+  if (packageSize == 0) {
+  	printf("error on _read_body_ok empty package \r\n");
+  }
+
 	onMessage(data,packageSize,self->mainID,self->subID);
 	free(tmpBuffer);
 
